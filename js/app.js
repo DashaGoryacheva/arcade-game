@@ -1,8 +1,8 @@
 let wins = 0;
 let numWins = document.querySelector('.counter');
-let newGame=document.querySelector('.restart');
-let livesList= document.getElementsByClassName('live');
-let liveBlock=document.querySelector('.lives');
+let newGame = document.querySelector('.restart');
+let livesList = document.getElementsByClassName('live');
+let liveBlock = document.querySelector('.lives');
 
 
 // Enemies our player must avoid
@@ -32,15 +32,15 @@ Enemy.prototype.update = function (dt) {
         player.x = 200;
         player.y = 400;
         liveBlock.removeChild(livesList[0]);
-        if(livesList.length===0){
-            setTimeout(function endMessg() {
+        if (livesList.length === 0) {
+            setTimeout(() => {
                 alert('YOU LOOSE!IF YOU WANT TO TRY AGAIN,PRESS OK');
             }, 500);
-            for(let i=0;i<3;i++){
-                let newLive=document.createElement('img');
-                newLive.src='images/Heart.png';
+            for (let i = 0; i < 3; i++) {
+                let newLive = document.createElement('img');
+                newLive.src = 'images/Heart.png';
                 newLive.classList.add('live');
-            liveBlock.appendChild(newLive);
+                liveBlock.appendChild(newLive);
             }
             restartGame();
         }
@@ -77,11 +77,11 @@ class Player {
             this.y = 400;
             numWins.innerHTML = wins;
             if (wins >= 5) {
-                setTimeout(function endMessg() {
+                setTimeout(() => {
                     alert('YOU WON!:)');
                 }, 500);
-                setTimeout(function resetWins() {
-                    wins=0;
+                setTimeout(() => {
+                    wins = 0;
                     numWins.innerHTML = wins;
                 }, 1000);
             }
@@ -138,12 +138,20 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.key]);
 });
-newGame.addEventListener('click',restartGame());
+newGame.addEventListener('click', restartGame);
 
-   function restartGame(){
-
-    wins=0;
+function restartGame() {
+    wins = 0;
     numWins.innerHTML = wins;
-    player.x=200;
-    player.y=400;
-   }
+    player.x = 200;
+    player.y = 400;
+    if (livesList.length !== 3) {
+        liveBlock.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            let newLive = document.createElement('img');
+            newLive.src = 'images/Heart.png';
+            newLive.classList.add('live');
+            liveBlock.appendChild(newLive);
+        }
+    }
+}
