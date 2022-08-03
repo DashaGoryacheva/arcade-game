@@ -3,8 +3,9 @@ let numWins = document.querySelector('.counter');
 let newGame = document.querySelector('.restart');
 let livesList = document.getElementsByClassName('live');
 let liveBlock = document.querySelector('.lives');
-
-
+let modal = document.querySelector('#myModal');
+let span = document.querySelector('.close');
+let content = document.querySelector('p');
 // Enemies our player must avoid
 var Enemy = function (x, y, v) {
     // Variables applied to each of our instances go here,
@@ -28,21 +29,18 @@ Enemy.prototype.update = function (dt) {
     if (this.x > 500) {
         this.x = -200;
     }
-    if (player.x < this.x + 30 && player.x > this.x - 30 && player.y < this.y + 30 && player.y > this.y - 30) {
+    if (player.x < this.x + 50 && player.x > this.x - 50 && player.y < this.y + 50 && player.y > this.y - 50) {
         player.x = 200;
         player.y = 400;
         liveBlock.removeChild(livesList[0]);
         if (livesList.length === 0) {
-            setTimeout(() => {
-                alert('YOU LOOSE!IF YOU WANT TO TRY AGAIN,PRESS OK');
-            }, 500);
-            for (let i = 0; i < 3; i++) {
-                let newLive = document.createElement('img');
-                newLive.src = 'images/Heart.png';
-                newLive.classList.add('live');
-                liveBlock.appendChild(newLive);
-            }
-            restartGame();
+            modal.style.display = "block";
+            content.textContent = 'YOU LOOSE:(((((';
+            span.addEventListener('click', function newGame() {
+                modal.style.display = "none";
+                restartGame();
+            });
+    
         }
     }
     // which will ensure the game runs at the same speed for
@@ -77,13 +75,13 @@ class Player {
             this.y = 400;
             numWins.innerHTML = wins;
             if (wins >= 5) {
-                setTimeout(() => {
-                    alert('YOU WON!:)');
-                }, 500);
-                setTimeout(() => {
-                    wins = 0;
-                    numWins.innerHTML = wins;
-                }, 1000);
+                modal.style.display = "block";
+                 content.textContent='YOU WIN';
+                content.style.color = 'green';
+                span.addEventListener('click', function newGame(){
+                    modal.style.display = "none";
+                    restartGame();
+                });
             }
         }
 
@@ -110,6 +108,7 @@ class Player {
 // Place the player object in a variable called player
 const allEnemies = [];
 const player = new Player(200, 400);
+function randomCoordinates(){
 for (let i = 0; i < 3; i++) {
     let y = [55, 145, 225]
     let v = [70, 130, 200];
@@ -119,9 +118,9 @@ for (let i = 0; i < 3; i++) {
     let randY = randomIntFromInterval(0, 2);
     const enemy = new Enemy(x[randX], y[randY], v[randV]);
     allEnemies.push(enemy);
-
 }
-
+}
+randomCoordinates();
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -145,6 +144,8 @@ function restartGame() {
     numWins.innerHTML = wins;
     player.x = 200;
     player.y = 400;
+    allEnemies.length=0;
+    randomCoordinates();
     if (livesList.length !== 3) {
         liveBlock.innerHTML = '';
         for (let i = 0; i < 3; i++) {
